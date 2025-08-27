@@ -42,7 +42,7 @@ jobs:
       - name: Run migrations
         run: |
           cd backend
-          python manage.py migrate
+          POSTGRES_HOST=localhost python manage.py migrate
 
       - name: Run tests
         run: |
