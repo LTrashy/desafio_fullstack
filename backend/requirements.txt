@@ -6,3 +6,5 @@ django-redis
 pytest
 pytest-django
 python-decouple
+django-filter
+django-cors-headers

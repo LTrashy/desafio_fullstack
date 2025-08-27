@@ -10,6 +10,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7
@@ -26,10 +31,31 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
-      - redis
-    command: python manage.py runserver 0.0.0.0:8000
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+          python manage.py seed_events --total 100 &&
+         python manage.py runserver 0.0.0.0:8000"
     user: "${UID}:${GID}"
+
+  frontend:
+    build: ./frontend
+    container_name: front_flutter
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./frontend:/app      
+      - flutter_cache:/app/.dart_tool   
+    command: flutter run -d web-server --web-port=8080 --web-hostname=0.0.0.0 --disable-service-auth-codes --hot
+    depends_on:
+      - web
+    mem_limit: 4g
+    stdin_open: true 
+    tty: true    
 
 volumes:
   postgres_data:
+  flutter_cache:
