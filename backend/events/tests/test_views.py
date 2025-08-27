@@ -43,7 +43,7 @@ def test_events_list_date_range_filter(client):
         lat=4.7, lng=-74.07, address="A"
     )
 
-    url = reverse("events-list") + "?from=2025-08-01&to=2025-08-31"
+    url = reverse("events-list") + "?from_date=2025-08-01&to_date=2025-08-31"
     resp = client.get(url)
     assert resp.status_code == 200
     data = resp.json()["results"]
