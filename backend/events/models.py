@@ -7,7 +7,6 @@ class Event(models.Model):
     lat = models.FloatField()
     lng = models.FloatField()
     address = models.CharField(max_length=255)
-    organizer = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.title
