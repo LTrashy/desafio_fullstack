@@ -1,0 +1,7 @@
+Django>=5.0
+djangorestframework
+django-filter
+psycopg2-binary
+django-redis
+pytest
+pytest-django
