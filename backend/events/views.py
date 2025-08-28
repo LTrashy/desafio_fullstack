@@ -4,7 +4,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Event
 from .serializers import EventSerializer
-from .filters import EventFilter  # lo defines en filters.py
+from .filters import EventFilter 
 
 
 class SizeQueryPagination(PageNumberPagination):

@@ -8,7 +8,6 @@ from events.models import Event
 
 @pytest.mark.django_db
 def test_events_list_pagination(client):
-    # crea 15 eventos
     for i in range(15):
         Event.objects.create(
             title=f"E{i}",
@@ -21,22 +20,17 @@ def test_events_list_pagination(client):
     resp = client.get(url)
     assert resp.status_code == 200
     data = resp.json()
-    # DRF por defecto retorna estructura con resultados si usas pagination class global.
-    # Aquí, usando PageNumberPagination en la vista, el formato es:
-    # { "count": N, "next": "...", "previous": "...", "results": [ ... ] }
     assert "results" in data
-    assert len(data["results"]) == 5  # 15 totales -> página 2 con size 10 = 5
+    assert len(data["results"]) == 5 
 
 
 @pytest.mark.django_db
 def test_events_list_date_range_filter(client):
-    # dentro del rango (agosto)
     Event.objects.create(
         title="In", description="d",
         date=timezone.make_aware(datetime(2025, 8, 10, 10, 0)),
         lat=4.7, lng=-74.07, address="A"
     )
-    # fuera del rango (septiembre)
     Event.objects.create(
         title="Out", description="d",
         date=timezone.make_aware(datetime(2025, 9, 1, 10, 0)),

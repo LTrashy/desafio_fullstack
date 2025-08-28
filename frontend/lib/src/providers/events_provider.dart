@@ -24,7 +24,6 @@ class EventsProvider extends ChangeNotifier {
 
       if (reset) _events.clear();
 
-      // Evitar duplicados
       for (var e in page.events) {
         if (!_events.any((existing) => existing.id == e.id)) {
           _events.add(e);
