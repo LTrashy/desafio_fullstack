@@ -1,4 +1,3 @@
-// lib/src/providers/events_provider.dart
 import 'package:flutter/material.dart';
 import '../models/event.dart';
 import '../models/paginated_events.dart';
@@ -6,42 +5,38 @@ import '../services/events_api.dart';
 
 class EventsProvider extends ChangeNotifier {
   final List<Event> _events = [];
-  int _page = 1;
-  final int _size = 10;
+  String? _nextPageUrl;
   bool _loading = false;
-  bool _hasMore = true;
 
   List<Event> get events => _events;
   bool get loading => _loading;
-  bool get hasMore => _hasMore;
+  bool get hasMore => _nextPageUrl != null;
 
   Future<void> fetchEvents({bool reset = false}) async {
     if (_loading) return;
-
-    if (reset) {
-      _events.clear();
-      _page = 1;
-      _hasMore = true;
-    }
 
     _loading = true;
     notifyListeners();
 
     try {
-      final PaginatedEvents newEvents =
-          await EventsApi.fetchEvents(page: _page, size: _size);
+      final String? url = reset ? null : _nextPageUrl;
+      final PaginatedEvents page = await EventsApi.fetchEvents(url: url);
 
-      if (newEvents.results.isEmpty) {
-        _hasMore = false;
-      } else {
-        _events.addAll(newEvents.results); // ✅ usar la lista results
-        _page++;
+      if (reset) _events.clear();
+
+      // Evitar duplicados
+      for (var e in page.events) {
+        if (!_events.any((existing) => existing.id == e.id)) {
+          _events.add(e);
+        }
       }
-    } catch (e) {
-      debugPrint("Error fetching events: $e");
-    }
 
-    _loading = false;
-    notifyListeners();
+      _nextPageUrl = page.nextPageUrl;
+    } catch (e) {
+      debugPrint('Error fetching events: $e');
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
   }
 }

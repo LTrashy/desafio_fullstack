@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/event.dart';
 import '../models/paginated_events.dart';
 
 class EventsApi {
-  static Future<PaginatedEvents> fetchEvents({int page = 1, int size = 10}) async {
-    final url = Uri.parse("http://localhost:8000/api/events/?page=$page&page_size=$size");
-    final response = await http.get(url);
+  static const String baseUrl = 'http://localhost:8000/api';
 
+  static Future<PaginatedEvents> fetchEvents({String? url}) async {
+    final response = await http.get(Uri.parse(url ?? '$baseUrl/events/'));
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      final Map<String, dynamic> data = jsonDecode(response.body);
       return PaginatedEvents.fromJson(data);
     } else {
-      throw Exception('Failed to load events');
+      throw Exception('Error fetching events');
     }
   }
 }

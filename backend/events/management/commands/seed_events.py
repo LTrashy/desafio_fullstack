@@ -18,8 +18,8 @@ class Command(BaseCommand):
             return
 
         titles = [
-            "Concierto", "Conferencia", "Feria", "Exposición", "Festival",
-            "Reunión", "Taller", "Seminario", "Charla", "Presentación"
+            "Concierto", "Conferencia", "Feria", "Exposicion", "Festival",
+            "Reunion", "Taller", "Seminario", "Charla", "Presentacion"
         ]
 
         addresses = [
@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
         for i in range(total):
             title = random.choice(titles) + f" {i+1}"
-            description = f"Descripción del evento {i+1}."
+            description = f"Descripcion del evento {i+1}."
             date = datetime.now() + timedelta(days=random.randint(-100, 100))
             lat = random.uniform(-90, 90)
             lng = random.uniform(-180, 180)

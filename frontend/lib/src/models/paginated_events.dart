@@ -1,24 +1,21 @@
-// lib/src/models/paginated_events.dart
 import 'event.dart';
 
 class PaginatedEvents {
-  final List<Event> results;
-  final int page;
-  final int totalPages;
+  final List<Event> events;
+  final String? nextPageUrl;
 
-  PaginatedEvents({
-    required this.results,
-    required this.page,
-    required this.totalPages,
-  });
+  PaginatedEvents({required this.events, this.nextPageUrl});
 
   factory PaginatedEvents.fromJson(Map<String, dynamic> json) {
+    final List<Event> events = (json['results'] as List)
+        .map((e) => Event.fromJson(e))
+        .toList();
+
     return PaginatedEvents(
-      results: (json['results'] as List)
-          .map((e) => Event.fromJson(e))
-          .toList(),
-      page: json['page'] ?? 1,
-      totalPages: json['total_pages'] ?? 1,
+      events: events,
+      nextPageUrl: json['next'],
     );
   }
+
+  bool get hasNextPage => nextPageUrl != null;
 }

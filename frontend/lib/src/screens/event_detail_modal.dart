@@ -23,8 +23,8 @@ class EventDetailModal extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          child: const Text("Cerrar"),
           onPressed: () => Navigator.of(context).pop(),
+          child: const Text("Cerrar"),
         ),
       ],
     );

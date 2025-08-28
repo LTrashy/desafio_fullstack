@@ -13,17 +13,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => EventsProvider()),
-      ],
+    return ChangeNotifierProvider(
+      create: (_) => EventsProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Eventos App',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          useMaterial3: true,
-        ),
+        theme: ThemeData(primarySwatch: Colors.blue),
         home: const EventsListScreen(),
       ),
     );
